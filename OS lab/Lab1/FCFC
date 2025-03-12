@@ -1,1 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void sorting(int at[], int bt[], int p[], int n) {
+    int temp;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (at[i] > at[j]) {
+                temp = at[i];
+                at[i] = at[j];
+                at[j] = temp;
+
+                temp = bt[i];
+                bt[i] = bt[j];
+                bt[j] = temp;
+
+                temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+}
+
+void ctandst(int at[], int bt[], int ct[], int st[], int n) {
+    ct[0] = at[0] + bt[0];
+    st[0] = at[0];
+    for (int i = 1; i < n; i++) {
+        if (ct[i - 1] < at[i]) {
+            st[i] = at[i];
+            ct[i] = at[i] + bt[i];
+        } else {
+            st[i] = ct[i - 1];
+            ct[i] = st[i] + bt[i];
+        }
+    }
+}
+
+void turnat(int ct[], int at[], int tat[], int n) {
+    for (int i = 0; i < n; i++) {
+        tat[i] = ct[i] - at[i];
+    }
+}
+
+void wait(int tat[], int bt[], int wt[], int n) {
+    for (int i = 0; i < n; i++) {
+        wt[i] = tat[i] - bt[i];
+    }
+}
+
+void respt(int st[], int at[], int rt[], int n) {
+    for (int i = 0; i < n; i++) {
+        rt[i] = st[i] - at[i];
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    int p[n], at[n], bt[n], ct[n], tat[n], wt[n], st[n], rt[n];
+
+    for (int i = 0; i < n; i++) {
+        p[i] = i;
+        printf("Enter arrival time (at) and burst time (bt) for process %d: ", i);
+        scanf("%d %d", &at[i], &bt[i]);
+    }
+
+    sorting(at, bt, p, n);
+    ctandst(at, bt, ct, st, n);
+    turnat(ct, at, tat, n);
+    wait(tat, bt, wt, n);
+    respt(st, at, rt, n);
+
+    int sum1 = 0, sum2 = 0;
+    for (int i = 0; i < n; i++) {
+        sum1 += tat[i];
+        sum2 += wt[i];
+    }
+
+    printf("p   at   bt   ct   tat   wt   rt");
+    for(int i=0;i<n;i++){
+        printf("\n%d   %d   %d   %d   %d   %d   %d",p[i],at[i],bt[i],ct[i],tat[i],wt[i],rt[i]);
+    }
+
+    
+    printf("\nAverage Turnaround Time: %.2f\n", (float)sum1 / n);
+    printf("Average Waiting Time: %.2f\n", (float)sum2 / n);
+
+    return 0;
+}
+
 
